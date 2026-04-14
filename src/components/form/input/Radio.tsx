@@ -1,5 +1,5 @@
 interface RadioProps {
-  id: string; // Unique ID for the radio button
+  id?: string; // Unique ID for the radio button
   name: string; // Radio group name
   value: string; // Value of the radio button
   checked: boolean; // Whether the radio button is checked

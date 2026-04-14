@@ -23,18 +23,21 @@ interface UserFormType {
   name: string;
   email: string;
   password?: string;
-  phoneNo: string;
+  phone: string;
   gender: string;
   address: string;
   status?: string;
+  username?: string;
 }
 
 interface APIUserItem {
-  by: UserItem[];
+  users: UserItem[];
   pagination: {
     currentPage: number;
-    rowsPerPage: number;
-    total: number;
+    totalPages: number;
+    totalRecords: number;
+    limit: number;
+    current: number;
   };
 }
 
@@ -49,7 +52,7 @@ interface ApiResponseType {
   code: string;
   status: string;
   message?: string;
-  data?: APIUserItem | any;
+  data?: APIUserItem | unknown;
 }
 
 export const getUserNames = async () => {
@@ -60,39 +63,51 @@ export const getUserNames = async () => {
   };
 };
 
-export const getUsers = async (queryParams: any) => {
-  const { page, per_page, sort_by, sort_order, filters } = queryParams;
+export const getUsers = async (queryParams: unknown) => {
+  const { page, per_page, sort_by, sort_order, filters } = queryParams as {
+    page?: number;
+    per_page?: number;
+    sort_by?: string;
+    sort_order?: string;
+    filters?: Record<string, unknown>;
+  };
   const payload = {
-    currentPage: Number(page) || 1,
+    current: Number(page) || 1,
     limit: Number(per_page) || 10,
     sort_by: sort_by || "id",
     sort_order: sort_order || "asc",
     filters: filters || {},
   };
+  console.log("Fetching users with payload:", payload);
 
-  const res: UserListResponseType = await api.post("/user/list", payload);
+  const res: UserListResponseType = await api.get(`/users/list?current=${page || 1}&limit=${per_page}`);
   try {
-    let responseJson = handleApiResponse(res);
+    const responseJson = handleApiResponse(res);
+
     return {
       ...responseJson,
       data: {
-        data: res.data?.by,
-        totalEntries: res.data?.pagination?.total,
-        totalPages: res.data?.pagination?.rowsPerPage,
-        page: res.data?.pagination?.currentPage,
+        data: res.data?.users,
+        totalEntries: res.data?.pagination?.totalRecords,
+        totalPages: res.data?.pagination?.totalPages,
+        page: res.data?.pagination?.current,
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    console.error("Error fetching users:", errorMessage);
+    
     return {
       status: "error",
-      message: error?.message || "Login failed",
+      message: `Error fetching users: ${errorMessage}`,
     };
   }
 };
 
 export const createUser = async (data: UserFormType) => {
-  const { id, ...payload } = data;
-  const res: ApiResponseType = await api.post("/user/create", payload);
+  const { ...payload } = data;
+  console.log("Creating user with payload:", payload);
+  const res: ApiResponseType = await api.post("/users", payload);
   return handleApiResponse(res);
 };
 

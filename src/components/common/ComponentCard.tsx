@@ -1,8 +1,13 @@
+import { PlusIcon } from "@/icons";
+import Button from "../ui/button/Button";
+
 interface ComponentCardProps {
   title: string;
   children: React.ReactNode;
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
+  handleButtonClick?: () => void; // Optional click handler for the button
+  buttonText: string; // Optional text for the button
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -10,6 +15,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   children,
   className = "",
   desc = "",
+  handleButtonClick,
+  buttonText,
 }) => {
   return (
     <div
@@ -17,9 +24,19 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
     >
       {/* Card Header */}
       <div className="px-6 py-5">
+        <div className="flex justify-between items-center">
         <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
-          {title}
+          {title} 
         </h3>
+        <Button
+          size="sm"
+          startIcon={<PlusIcon />}
+          // onClick={createModal.openModal}
+          onClick={handleButtonClick}
+        >
+         {buttonText}
+        </Button>
+        </div>
         {desc && (
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {desc}

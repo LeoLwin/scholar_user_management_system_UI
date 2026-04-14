@@ -1,0 +1,267 @@
+import { createUser, getUsers, updateUser } from '@/api/userService'
+import ComponentCard from '@/components/common/ComponentCard'
+import PageBreadcrumb from '@/components/common/PageBreadCrumb'
+import PageMeta from '@/components/common/PageMeta'
+// import BasicTableOne from '@/components/tables/BasicTables/BasicTableOne'
+import DataTable from '@/components/tables/DataTable'
+import Notification from '@/components/ui/notification/Notifiaction'
+import { useModal } from '@/hooks/useModal'
+import { EyeIcon, PencilIcon } from '@/icons'
+import { useCallback, useEffect, useState } from 'react'
+import CreateForm from './CreateForm'
+
+interface RoleItem {
+    id: string | number;
+    name: string;
+}
+
+interface UserItem {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+    // password: string;
+    roleId: number;
+    role: RoleItem;
+    phone: string;
+    gender: string;
+    address: string;
+    isActive: boolean;
+}
+
+interface queryParamType {
+    [key: string]: unknown;
+}
+
+interface ApiResult {
+    status: "success" | "error" | "warning" | "info";
+    message: string;
+    data?: unknown;
+}
+
+interface UserFormType {
+    id: string | number;
+    name: string;
+    email: string;
+    // password: string;
+    roleId: number;
+    phone: string;
+    gender: string;
+    address: string;
+    status?: string;
+}
+
+const sortCols = ["name", "roles.name"];
+
+const Users = () => {
+
+    const [users, setUsers] = useState<UserItem[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [selectedId, setSelectedId] = useState<string | number>("");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [deleteId, setDeleteId] = useState<string | number>("");
+    // const [deleteLoading, setDeleteLoading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [showAdminsOnly, setShowAdminsOnly] = useState(false);
+    const [user, setUser] = useState<UserItem>(null as unknown as UserItem);
+
+    //Pagination
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [isPagination, setIsPagination] = useState(true);
+    const [totalEntries, setTotalEntries] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const [queryParams, setQueryParams] = useState<queryParamType>({
+        isPagination: isPagination,
+        page: page,
+        per_page: 10,
+        sort_by: 'created_at', // id
+        sort_order: "desc",
+        filters: {},
+    });
+
+    const createModal = useModal();
+    const editModal = useModal();
+
+
+
+    const columns = [
+        // { key: "id", header: "ID", render: (user: UserItem) => user.id },
+        { key: "name", header: "User Name", render: (user: UserItem) => user.name },
+        { key: "email", header: "Email", render: (user: UserItem) => user.email },
+        {
+            key: "roles.name",
+            header: "Role Name",
+            render: (user: UserItem) => user.role?.name,
+        },
+        {
+            key: "phoneNo",
+            header: "Phone No",
+            render: (user: UserItem) => user.phone,
+        },
+        {
+            key: "gender",
+            header: "Gender",
+            render: (user: UserItem) => user.gender,
+        },
+        {
+            key: "address",
+            header: "Address",
+            render: (user: UserItem) => user.address,
+        },
+        {
+            key: "status",
+            header: "Status",
+            render: (user: UserItem) => user.isActive ? (<span className="text-green-500">Active</span>) : (<span className="text-red-500">Inactive</span>),
+        },
+        {
+            key: "action",
+            header: "Action",
+            render: (user: UserItem) => (
+                <div className="col-span-1 flex items-center gap-2">
+                    <button
+                        className="btn text-blue-500"
+                        onClick={() => viewDetails(user.id)}
+                    >
+                        <EyeIcon className="fill-blue-500 size-5" />
+                    </button>
+                    <button
+                        className="btn text-blue-500"
+                        onClick={() => handleEdit(user.id)}
+                    >
+                        <PencilIcon className="size-5" />
+                    </button>
+                    {/* {user.role?.name === "admin" && (
+            <button
+              className="btn text-red-500"
+              onClick={() => handleDelete(user.id)}
+            >
+              <TrashBinIcon className="size-5" />
+            </button>
+          )} */}
+                </div>
+            ),
+        },
+    ];
+
+    const viewDetails = async (id: string | number) => {
+        console.log("View details for user ID:", id);
+        // let result: ApiResult = { status: "error", message: "", data: {} };
+        // result = await getUserById(id);
+        // if (result.data) {
+        //   setUser(result.data);
+        //   detailsModal.openModal();
+        // }
+    };
+
+    const handleEdit = async (id: string | number) => {
+        console.log("Edit user ID:", id);
+        // const result: ApiResult = await getUserById(id);
+
+        // if (result.status === "success") {
+        //   setUser(result.data);
+        //   editModal.openModal();
+        // }
+    };
+
+    const handleParamUpdate = (updateParams: queryParamType) => {
+        setQueryParams((prev) => ({
+            ...prev,
+            ...updateParams,
+        }));
+    };
+
+    const handleButtonClick = () => {
+        console.log("Button clicked");
+        createModal.openModal();
+    }
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            console.log('queryParams', queryParams);
+            const result = await getUsers(queryParams); // call API
+
+            if (result.status === "success") {
+                const res = result as {
+                    status: "success";
+                    message: string;
+                    data: {
+                        data: UserItem[];
+                        totalEntries: number;
+                        totalPages: number;
+                        page: number;
+                    };
+                };
+                setUsers(res?.data?.data || []);
+                setTotalEntries(res.data.totalEntries);
+                setTotalPages(res.data.totalPages);
+                setPage(res.data.page);
+            } else {
+                const res = result as { status: "success"; message: string };
+                Notification(res?.status, res.status, res.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }, [queryParams]); // Include queryParams in the dependency array
+
+    const saveData = async (data: UserFormType) => {
+        let result: ApiResult = { status: "error", message: "" };
+        console.log("saveData", data);
+        if (data.id == "") {
+            result = await createUser(data);
+            // message = result.message;
+            createModal.closeModal();
+        } else {
+            result = await updateUser(data.id, data);
+            // message = result.message;
+            editModal.closeModal();
+        }
+        Notification(result.status, result.status, result.message);
+        setUser(null as unknown as UserItem);
+        fetchData();
+    };
+
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+    return (
+        <>
+            <PageMeta
+                title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
+                description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+            />
+            <PageBreadcrumb pageTitle="Users" />
+            <div className="space-y-6">
+                <ComponentCard title="Basic Table 1" handleButtonClick={handleButtonClick} buttonText="Create User">
+                    <DataTable
+                        columns={columns}
+                        data={
+                            showAdminsOnly
+                                ? users.filter((u) => u.role?.name === "admin")
+                                : users
+                        }
+                        sortCols={sortCols}
+                        isPagination={isPagination}
+                        onChangeParam={handleParamUpdate}
+                        totalEntries={
+                            showAdminsOnly
+                                ? users.filter((u) => u.role?.name === "admin").length
+                                : totalEntries
+                        }
+                        totalPages={totalPages}
+                        page={page}
+                        loading={loading}
+                    />
+                </ComponentCard>
+            </div>
+            <CreateForm createModal={createModal} onSave={saveData} />
+
+        </>
+    )
+}
+
+export default Users

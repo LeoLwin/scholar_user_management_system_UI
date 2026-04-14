@@ -9,7 +9,7 @@ export type LoginResult = {
 export type Role = {
 	id: string,
 	name: string;
-	description: string;
+	description?: string;
 }
 
 export type User = {

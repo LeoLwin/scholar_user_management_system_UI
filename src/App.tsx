@@ -9,6 +9,10 @@ import { ScrollToTop } from "@/components/common/ScrollToTop";
 import Home from "@/pages/Dashboard/Home";
 import { AuthProvider } from "./context/AuthProvider";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import { Toaster } from "react-hot-toast";
+import BasicTables from "./pages/Tables/BasicTables";
+import RoleRoute from "./components/auth/RoleRoute";
+import Users from "./pages/Users/Users";
 
 
 export default function App() {
@@ -16,6 +20,7 @@ export default function App() {
     <>
       <Router>
         <AuthProvider>
+          <Toaster position="top-right" reverseOrder={false} toastOptions={{ duration: 3000 }} />
           <ScrollToTop />
           <Routes>
             {/* Dashboard Layout */}
@@ -27,6 +32,17 @@ export default function App() {
               }
             >
               <Route index path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Home />} />
+              <Route path="/basic-tables" element={<BasicTables />} />
+               <Route
+                index
+                path="/users"
+                element={
+                  <RoleRoute allowedRoles={["admin"]}>
+                    <Users />
+                  </RoleRoute>
+                }
+              />
               {/* <Route
                 index
                 path="/roles"
