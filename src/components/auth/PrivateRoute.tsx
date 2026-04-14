@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate } from "react-router";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 type PrivateRouteProps = {
     children: React.ReactNode;
@@ -8,7 +8,7 @@ type PrivateRouteProps = {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, allowedRoles }) => {
-    const auth = useAuth();
+    const auth = useAuth() as { user?: { role?: { name: string } } };
     if (!localStorage.getItem('user')) return <Navigate to="/signin" replace />
 
     if (allowedRoles && auth.user?.role?.name && !allowedRoles.includes(auth.user?.role?.name)) return <Navigate to="/unauthorized" replace />

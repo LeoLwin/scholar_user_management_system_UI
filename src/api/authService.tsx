@@ -36,7 +36,7 @@ interface ApiResponseType {
   code: string;
   status: string;
   message?: string;
-  data?: any;
+  data?: unknown;
 }
 
 export const testAPI = async () => {
@@ -49,7 +49,7 @@ export const login = async (
 ) => {
   const payload = data;
   const res: LoginResponse = await api.post("/auth/login", payload);
-  let responseJson = handleApiResponse(res);
+  const responseJson = handleApiResponse(res);
   return {
     ...responseJson,
     data: res.data,

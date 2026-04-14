@@ -2,7 +2,7 @@
 interface ApiResult {
 	status: "success" | "error" | "warning" | "info";
 	message: string;
-	data?: any
+	data?: unknown
 }
 
 
@@ -10,7 +10,7 @@ interface ApiResponseType{
   code : string,
   status : string,
   message?: string;
-  data?: any;
+  data?: unknown;
 }
   
 export function handleApiResponse(res: ApiResponseType): ApiResult {
