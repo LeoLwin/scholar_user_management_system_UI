@@ -208,6 +208,7 @@ const Users = () => {
     }, [queryParams]); // Include queryParams in the dependency array
 
     const saveData = async (data: UserFormType) => {
+        console.log("saveData", data);
         let result: ApiResult = { status: "error", message: "" };
         console.log("saveData", data);
         if (data.id == "") {
