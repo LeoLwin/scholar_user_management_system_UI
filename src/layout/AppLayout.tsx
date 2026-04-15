@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar from "./AppSidebar";
+import { Toaster } from "react-hot-toast";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
@@ -19,6 +20,14 @@ const LayoutContent: React.FC = () => {
         } ${isMobileOpen ? "ml-0" : ""}`}
       >
         <AppHeader />
+        <Toaster
+            position="top-right"
+            reverseOrder={false}
+            containerStyle={{top:"100px"}}
+            toastOptions={{
+              duration: 3000
+            }}
+          />
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>

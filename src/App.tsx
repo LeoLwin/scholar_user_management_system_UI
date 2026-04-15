@@ -20,7 +20,6 @@ export default function App() {
     <>
       <Router>
         <AuthProvider>
-          <Toaster position="top-right" reverseOrder={false} toastOptions={{ duration: 3000 }} />
           <ScrollToTop />
           <Routes>
             {/* Dashboard Layout */}
@@ -38,7 +37,7 @@ export default function App() {
                 index
                 path="/users"
                 element={
-                  <RoleRoute allowedRoles={["admin"]}>
+                  <RoleRoute allowedRoles={["Super Admin"]}>
                     <Users />
                   </RoleRoute>
                 }

@@ -1,4 +1,4 @@
-import { createUser, getUsers, updateUser } from '@/api/userService'
+import { createUser, getUserById, getUsers, updateUser } from '@/api/userService'
 import ComponentCard from '@/components/common/ComponentCard'
 import PageBreadcrumb from '@/components/common/PageBreadCrumb'
 import PageMeta from '@/components/common/PageMeta'
@@ -9,11 +9,26 @@ import { useModal } from '@/hooks/useModal'
 import { EyeIcon, PencilIcon } from '@/icons'
 import { useCallback, useEffect, useState } from 'react'
 import CreateForm from './CreateForm'
+import EditForm from './EditForm'
+import Details from './Details'
 
 interface RoleItem {
     id: string | number;
     name: string;
 }
+// interface FormData {
+//     id: number;
+//     name: string;
+//     username: string;
+//     email: string;
+//     // password: string;
+//     roleId: number;
+//     // role: RoleItem;
+//     phone: string;
+//     gender: string;
+//     address: string;
+//     isActive: boolean;
+// }
 
 interface UserItem {
     id: number;
@@ -51,6 +66,19 @@ interface UserFormType {
     status?: string;
 }
 
+interface UserDetailsType {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+    // password: string;
+    roleId: number;
+    role: string;
+    phone: string;
+    gender: string;
+    address: string;
+    isActive: boolean;
+}
 const sortCols = ["name", "roles.name"];
 
 const Users = () => {
@@ -63,7 +91,30 @@ const Users = () => {
     // const [deleteLoading, setDeleteLoading] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [showAdminsOnly, setShowAdminsOnly] = useState(false);
-    const [user, setUser] = useState<UserItem>(null as unknown as UserItem);
+    const [user, setUser] = useState<UserItem>({
+        id: 0,
+        name: "",
+        username: "",
+        email: "",
+        roleId: 0,
+        role: { id: 0, name: "" },
+        phone: "",
+        gender: "male",
+        address: "",
+        isActive: true,
+    });
+    const [userDetails, setUserDetails] = useState<UserDetailsType>({
+        id: 0,
+        name: "",
+        username: "",
+        email: "",
+        roleId: 0,
+        role: "",
+        phone: "",
+        gender: "male",
+        address: "",
+        isActive: true,
+    });
 
     //Pagination
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -83,6 +134,8 @@ const Users = () => {
 
     const createModal = useModal();
     const editModal = useModal();
+    const detailsModal = useModal();
+
 
 
 
@@ -147,22 +200,47 @@ const Users = () => {
 
     const viewDetails = async (id: string | number) => {
         console.log("View details for user ID:", id);
-        // let result: ApiResult = { status: "error", message: "", data: {} };
-        // result = await getUserById(id);
-        // if (result.data) {
-        //   setUser(result.data);
-        //   detailsModal.openModal();
-        // }
+        const result: ApiResult = await getUserById(id);
+        if (
+            typeof result === 'object' &&
+            result !== null &&
+            'status' in result &&
+            'data' in result
+        ) {
+
+            const res = result as { status: string; data: UserDetailsType };
+
+            if (res.status === "success") {
+                console.log("User data:", res.data);
+                // setUser(res.data);
+                setUserDetails(res.data);
+                detailsModal.openModal();
+            }
+        }
     };
 
-    const handleEdit = async (id: string | number) => {
+    const handleEdit = async (id: number) => {
         console.log("Edit user ID:", id);
-        // const result: ApiResult = await getUserById(id);
+        if (!id) return;
 
-        // if (result.status === "success") {
-        //   setUser(result.data);
-        //   editModal.openModal();
-        // }
+        const result: ApiResult = await getUserById(id);
+        console.log("getUserById result", result);
+
+        if (
+            typeof result === 'object' &&
+            result !== null &&
+            'status' in result &&
+            'data' in result
+        ) {
+
+            const res = result as { status: string; data: UserItem };
+
+            if (res.status === "success") {
+                console.log("User data:", res.data);
+                setUser(res.data);
+                editModal.openModal();
+            }
+        }
     };
 
     const handleParamUpdate = (updateParams: queryParamType) => {
@@ -221,7 +299,18 @@ const Users = () => {
             editModal.closeModal();
         }
         Notification(result.status, result.status, result.message);
-        setUser(null as unknown as UserItem);
+        setUser({
+            id: 0,
+            name: "",
+            username: "",
+            email: "",
+            roleId: 0,
+            role: { id: 0, name: "" },
+            phone: "",
+            gender: "male",
+            address: "",
+            isActive: true,
+        });
         fetchData();
     };
 
@@ -260,6 +349,8 @@ const Users = () => {
                 </ComponentCard>
             </div>
             <CreateForm createModal={createModal} onSave={saveData} />
+            <EditForm editModal={editModal} userData={user} onSave={saveData} />
+            <Details detailsModal={detailsModal} userData={userDetails} />
 
         </>
     )

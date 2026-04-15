@@ -112,7 +112,7 @@ export const createUser = async (data: UserFormType) => {
 };
 
 export const getUserById = async (id: string | number) => {
-  const res: ApiResponseType = await api.get(`/user/details/${id}`);
+  const res: ApiResponseType = await api.get(`/users/${id}`);
   const response = handleApiResponse(res);
   return {
     ...response,
@@ -121,12 +121,12 @@ export const getUserById = async (id: string | number) => {
 };
 
 export const updateUser = async (id: string | number, data: UserFormType) => {
-  const res: ApiResponseType = await api.put(`/user/update/${id}`, data);
+  const res: ApiResponseType = await api.put(`/users/${id}`, data);
   return handleApiResponse(res);
 };
 
 export const deleteUser = async (id: string | number) => {
-  const res: ApiResponseType = await api.delete(`/user/delete/${id}`);
+  const res: ApiResponseType = await api.delete(`/users/${id}`);
   return handleApiResponse(res);
 };
 
