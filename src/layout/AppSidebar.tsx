@@ -49,13 +49,13 @@ const navItems: NavItem[] = [
     icon: <BoxIcon />,
     name: "Roles",
     path: "/roles",
-    roles: ["admin"],
+    roles: ["Super Admin"],
   },
   {
     icon: <UserIcon />,
     name: "Users",
     path: "/users",
-    roles: ["admin"],
+    roles: ["Super Admin"],
   },
   {
     name: "Forms",

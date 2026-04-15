@@ -1,21 +1,29 @@
 import api from "./api";
 // import { useState, useEffect } from "react";
 import { handleApiResponse } from "./ApiResonse";
-interface RoleItem {
-  id: string |number;
+
+interface permissionItem {
+  id: number;
   name: string;
-  description: string;
+  feature: string;
+}
+interface RoleItem {
+  id: number;
+  name: string;
+  userCount : number;
+  permissions: permissionItem[];
 }
 // interface RoleLists {
 //   value: string;
 //   label: string;
 // }
 interface APIRoleItem {
-  by: RoleItem[];
+  roles: RoleItem[];
   pagination: {
     currentPage: number;
-    rowsPerPage: number;
-    total: number;
+    totalPages: number;
+    totalRecords: number;
+    limit: number;
   };
 }
 interface RoleListResponseType {
@@ -40,8 +48,14 @@ export const getRoleNames = async () => {
   };
 };
 
-export const getRoles = async (queryParams: any) => {
-  const { page, per_page, sort_by, sort_order, filters } = queryParams;
+export const getRoles = async (queryParams: unknown) => {
+  const { page, per_page, sort_by, sort_order, filters } = queryParams as {
+    page: number;
+    per_page: number;
+    sort_by: string;
+    sort_order: string;
+    filters: Record<string, unknown>;
+  };
 
   const payload = {
     currentPage: Number(page) || 1,
@@ -50,16 +64,17 @@ export const getRoles = async (queryParams: any) => {
     sort_order: sort_order || "asc",
     filters: filters || {},
   };
+  console.log("Fetching roles with payload:", payload);
 
-  const res: RoleListResponseType = await api.post("/role/list", payload);
+  const res: RoleListResponseType = await api.get(`/roles/list?current=${page || 1}&limit=${per_page}`);
   try {
   const responseJson = handleApiResponse(res);
   return {
     ...responseJson,
     data: {
-      data: res.data?.by,
-      totalEntries: res.data?.pagination?.total,
-      totalPages: res.data?.pagination?.rowsPerPage,
+      data: res.data?.roles,
+      totalEntries: res.data?.pagination?.totalRecords,
+      totalPages: res.data?.pagination?.totalPages,
       page: res.data?.pagination?.currentPage,
     },
   };

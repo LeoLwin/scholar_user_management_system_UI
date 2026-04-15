@@ -9,10 +9,10 @@ import { ScrollToTop } from "@/components/common/ScrollToTop";
 import Home from "@/pages/Dashboard/Home";
 import { AuthProvider } from "./context/AuthProvider";
 import PrivateRoute from "@/components/auth/PrivateRoute";
-import { Toaster } from "react-hot-toast";
 import BasicTables from "./pages/Tables/BasicTables";
 import RoleRoute from "./components/auth/RoleRoute";
 import Users from "./pages/Users/Users";
+import Role from "./pages/Roles/Role";
 
 
 export default function App() {
@@ -42,15 +42,15 @@ export default function App() {
                   </RoleRoute>
                 }
               />
-              {/* <Route
+              <Route
                 index
                 path="/roles"
                 element={
-                  <RoleRoute allowedRoles={["admin"]}>
+                  <RoleRoute allowedRoles={["Super Admin"]}>
                     <Role />
                   </RoleRoute>
                 }
-              /> */}
+              />
 
 
               <Route path="/profile" element={<UserProfiles />} />
