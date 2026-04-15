@@ -11,17 +11,6 @@ import { getRoleNames } from "@/api/roleService";
 import CustomSelect from "@/components/form/switch/CustomSelect";
 import LoadingCircle from "@/components/common/LoadingCircle";
 
-// interface FormData {
-//   id: string | number;
-//   name: string;
-//   email: string;
-//   // password: string;
-//   roleId: string;
-//   phoneNo: string;
-//   gender: string;
-//   address: string;
-//   status?: string;
-// }
 
 
 interface FormData {
@@ -99,9 +88,6 @@ function CreateForm({ createModal, onSave }: ModalProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(()=>{
-    console.log("Form Data Updated:", formData);
-  },[formData])
 
   const saveData = async () => {
     const validationErrors = await validateForm();

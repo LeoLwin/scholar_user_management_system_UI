@@ -66,7 +66,7 @@ export const getRoles = async (queryParams: unknown) => {
   };
   console.log("Fetching roles with payload:", payload);
 
-  const res: RoleListResponseType = await api.get(`/roles/list?current=${page || 1}&limit=${per_page}`);
+  const res: RoleListResponseType = await api.get(`/roles/list?current=${page || 1}&limit=${per_page}&name=${filters.name || ""}`);
   try {
   const responseJson = handleApiResponse(res);
   return {
@@ -92,7 +92,7 @@ export const createRole = async (data: any) => {
   
   const { id, ...payload } = data;
   console.log('createRole payload', id);
-  const res: ApiResponseType = await api.post("/role/create", payload);
+  const res: ApiResponseType = await api.post("/roles", payload);
   return handleApiResponse(res);
 };
 
@@ -107,11 +107,11 @@ export const getRoleById = async (id: string | number) => {
 };
 
 export const updateRole = async (id: string | number, data: RoleItem) => {
-  const res: ApiResponseType = await api.put(`/role/update/${id}`, data);
+  const res: ApiResponseType = await api.put(`/roles/${id}`, data);
   return handleApiResponse(res);
 };
 
 export const deleteRole = async (id: string | number) => {
-  const res: ApiResponseType = await api.delete(`/role/delete/${id}`);
+  const res: ApiResponseType = await api.delete(`/roles/${id}`);
   return handleApiResponse(res);
 };

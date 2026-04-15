@@ -47,6 +47,7 @@ function CreateForm({ createModal, roleData, onSave }: ModalProps) {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Input changed:", e.target.name, e.target.value);
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -78,51 +79,71 @@ function CreateForm({ createModal, roleData, onSave }: ModalProps) {
       <Modal
         isOpen={createModal.isOpen}
         onClose={createModal.closeModal}
-        className="max-w-[700px] m-4"
+        className="max-w-[500px] m-4" // Role name တစ်ခုတည်းမို့ width ကို နည်းနည်းလျှော့လိုက်တာ ပိုကျစ်လစ်သွားစေတယ်
       >
-        <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
-          <div className="px-2 pr-14">
-            <h4 className="uppercase mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Create Role
+        <div className="relative w-full p-6 overflow-hidden bg-white rounded-2xl dark:bg-gray-900 lg:p-10">
+          {/* Header Section */}
+          <div className="mb-8">
+            <h4 className="text-xl font-bold tracking-tight text-gray-900 uppercase dark:text-white">
+              Create New Role
             </h4>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Assign a unique name to define this user group.
+            </p>
           </div>
-          <div className="px-2 overflow-y-auto custom-scrollbar">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-              <div>
-                <Label>Role Name</Label>
+
+          {/* Form Section */}
+          <div className="space-y-6">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="role-name" className="text-sm font-medium">
+                Role Name
+              </Label>
+              <div className="relative">
                 <Input
+                  id="role-name"
                   type="text"
-                  // value=""
-                  placeholder="Enter Role Name"
+                  placeholder="e.g. Sales Manager, Content Editor"
                   name="name"
                   onChange={handleInputChange}
+                  className={`h-11 px-4 transition-all duration-200 border-gray-200 focus:ring-2 focus:ring-primary-500/20 ${errors.name ? 'border-red-500 focus:ring-red-500/20' : ''
+                    }`}
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                )}
+                {/* Optional: Add a small icon inside input for better look */}
               </div>
-              <div>
-                <Label>Role Description</Label>
-                <Input
-                  type="text"
-                  // value=""
-                  placeholder="Enter Description"
-                  name="description"
-                  onChange={handleInputChange}
-                />
-              </div>
+
+              {errors.name && (
+                <div className="flex items-center gap-1 mt-1 animate-in fade-in slide-in-from-top-1">
+                  <span className="text-xs font-medium text-red-500">
+                    {errors.name}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
-          <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-end gap-3 mt-10">
             <Button
-              size="sm"
+              size="md"
               variant="outline"
               onClick={createModal.closeModal}
+              className="text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-              Close
+              Cancel
             </Button>
-            <Button size="sm" onClick={saveData} disabled={loading}>
-              {loading ? <LoadingCircle description="Saving..." /> : "Save"}
+            <Button
+              size="md"
+              onClick={saveData}
+              disabled={loading}
+              className="px-6 font-semibold shadow-sm shadow-primary-500/20"
+            >
+              {loading ? (
+                <div className="flex items-center gap-2">
+                   <LoadingCircle description="Creating ..." /> 
+                </div>
+              ) : (
+                "Create Role"
+              )}
             </Button>
           </div>
         </div>

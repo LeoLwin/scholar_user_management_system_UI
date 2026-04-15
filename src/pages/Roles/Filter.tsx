@@ -5,7 +5,7 @@ import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 
 interface queryParamType {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 interface FilterType<T> {
   onChangeParam: (queryParams: queryParamType) => void;
@@ -19,11 +19,13 @@ function Filter<T>({ onChangeParam }: FilterType<T>) {
   }, [filtersData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Filter input changed:", e.target.name, e.target.value);
     const { name, value } = e.target;
     setFilter({ ...filters, [name]: value });
   };
 
   const searchData = () => {
+    console.log("Applying filters:", filters);
     const filterArr = Object.fromEntries(
       Object.entries(filters).filter(([_, value]) => value !== "")
     );
@@ -38,7 +40,9 @@ function Filter<T>({ onChangeParam }: FilterType<T>) {
   return (
     <>
       <div className="space-y-6 mb-5">
-        <ComponentCard title="Filter">
+        {/* <ComponentCard title="Filter "> */}
+        <ComponentCard title="Filter" >
+
           <div className="flex flex-wrap gap-3">
             <div className="w-full md:w-1/3">
               <Label htmlFor="input">Role's Name</Label>

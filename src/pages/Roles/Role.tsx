@@ -15,7 +15,7 @@ import { PencilIcon, TrashBinIcon, EyeIcon } from "../../icons";
 
 import {
   getRoles,
-  getRoleById,
+  // getRoleById,
   createRole,
   updateRole,
   deleteRole,
@@ -198,6 +198,7 @@ export default function Role() {
 
   const saveData = async (data: RoleItem) => {
     let result: ApiResult = { status: "error", message: "" };
+    console.log("Saving Role Data:", data);
     if (!data.id) {
       result = await createRole(data);
       createModal.closeModal();
@@ -245,6 +246,11 @@ export default function Role() {
     }
   };
 
+  const handleButtonClick = () => {
+        console.log("Button clicked");
+        createModal.openModal();
+    }
+
   return (
     <>
       <PageBreadcrumb
@@ -265,7 +271,8 @@ export default function Role() {
       </div>
       <Filter onChangeParam={handleParamUpdate} />
       <div className="space-y-6">
-        <ComponentCard title="Listing" buttonText="Create Role">
+        <ComponentCard title="Listing" buttonText="Create Role" handleButtonClick={handleButtonClick}>
+          
           <DataTable
             columns={columns}
             data={roles}

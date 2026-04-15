@@ -199,7 +199,6 @@ const Users = () => {
     ];
 
     const viewDetails = async (id: string | number) => {
-        console.log("View details for user ID:", id);
         const result: ApiResult = await getUserById(id);
         if (
             typeof result === 'object' &&
@@ -211,7 +210,6 @@ const Users = () => {
             const res = result as { status: string; data: UserDetailsType };
 
             if (res.status === "success") {
-                console.log("User data:", res.data);
                 // setUser(res.data);
                 setUserDetails(res.data);
                 detailsModal.openModal();
@@ -220,12 +218,9 @@ const Users = () => {
     };
 
     const handleEdit = async (id: number) => {
-        console.log("Edit user ID:", id);
         if (!id) return;
 
         const result: ApiResult = await getUserById(id);
-        console.log("getUserById result", result);
-
         if (
             typeof result === 'object' &&
             result !== null &&
@@ -236,7 +231,6 @@ const Users = () => {
             const res = result as { status: string; data: UserItem };
 
             if (res.status === "success") {
-                console.log("User data:", res.data);
                 setUser(res.data);
                 editModal.openModal();
             }
@@ -251,14 +245,12 @@ const Users = () => {
     };
 
     const handleButtonClick = () => {
-        console.log("Button clicked");
         createModal.openModal();
     }
 
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
-            console.log('queryParams', queryParams);
             const result = await getUsers(queryParams); // call API
 
             if (result.status === "success") {
@@ -286,9 +278,7 @@ const Users = () => {
     }, [queryParams]); // Include queryParams in the dependency array
 
     const saveData = async (data: UserFormType) => {
-        console.log("saveData", data);
         let result: ApiResult = { status: "error", message: "" };
-        console.log("saveData", data);
         if (data.id == "") {
             result = await createUser(data);
             // message = result.message;
