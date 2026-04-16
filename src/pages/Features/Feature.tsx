@@ -26,7 +26,11 @@ interface FeatureItem {
   name: string;
   permissions: permissionItem[];
   userCount: number;
+
+
 }
+
+
 
 const sortCols = ["name"];
 
@@ -57,6 +61,7 @@ export default function Feature() {
     userCount: 0,
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isPagination, setIsPagination] = useState(true);
   const [totalEntries, setTotalEntries] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -167,11 +172,13 @@ export default function Feature() {
   };
 
   const viewDetails = async (id: number, feature: FeatureItem) => {
+    console.log("Viewing details for Feature ID:", id);
     setFeature(feature);
     detailsModal.openModal();
   };
 
   const handleEdit = async (id: number, feature: FeatureItem) => {
+    console.log("Editing Feature ID:", id);
     setFeature(feature);
     editModal.openModal();
   };
@@ -227,6 +234,10 @@ export default function Feature() {
     createModal.openModal();
   };
 
+
+  useEffect(() => {
+    setIsPagination(queryParams.isPagination as boolean);
+  }, []);
   return (
     <>
       <PageBreadcrumb

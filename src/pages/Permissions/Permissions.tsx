@@ -75,7 +75,8 @@ export default function Permissions() {
     });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isPagination, setIsPagination] = useState(true);
+  // const [isPagination, setIsPagination] = useState(true);
+  const [isPagination] = useState(true);
   const [totalEntries, setTotalEntries] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
@@ -243,11 +244,14 @@ export default function Permissions() {
   };
 
   const viewDetails = async (id: number, permission: PermissionsItem) => {
+    console.log("Viewing details for Permission ID:", id);
     setPermission(permission);
     detailsModal.openModal();
   };
 
+
   const handleEdit = async (id: number, permission: PermissionsItem) => {
+    console.log("Editing Permission ID:", id);
     // setPermission(permission);
     setEditFormData({
       id: permission.id,

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "../../components/ui/modal";
 import { ModalHook } from "../../hooks/useModal";
 import Label from "../../components/form/Label";
@@ -43,14 +43,7 @@ function EditForm({ editModal, roleData, onSave }: ModalProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const groupedPermissions = useMemo(() => {
-    return formData.permissions.reduce((acc: any, p) => {
-      if (!acc[p.feature]) acc[p.feature] = [];
-      acc[p.feature].push(p);
-      return acc;
-    }, {});
-  }, [formData.permissions]);
-
+  
 
 
 

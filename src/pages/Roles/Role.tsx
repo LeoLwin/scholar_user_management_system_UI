@@ -66,7 +66,8 @@ export default function Role() {
 
   //Pagination
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isPagination, setIsPagination] = useState(true);
+  // const [isPagination, setIsPagination] = useState(true);
+  const [isPagination]= useState(true);
   const [totalEntries, setTotalEntries] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
@@ -176,6 +177,7 @@ export default function Role() {
   };
 
   const viewDetails = async (id: number, role: RoleItem) => {
+    console.log("Viewing details for Role ID:", id);
     // let result: ApiResult = { status: "error", message: "", data: {} };
     // result = await getRoleById(id);
     // if (result.data) {
@@ -186,6 +188,7 @@ export default function Role() {
   };
 
   const handleEdit = async (id: number, role: RoleItem) => {
+    console.log("Editing Role ID:", id);
     // let result: ApiResult = { status: "error", message: "", data: {} };
     // result = await getRoleById(id);
     // if (result.data) {

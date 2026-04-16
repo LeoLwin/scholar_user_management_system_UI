@@ -84,13 +84,9 @@ const sortCols = ["name", "roles.name"];
 const Users = () => {
 
     const [users, setUsers] = useState<UserItem[]>([]);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [selectedId, setSelectedId] = useState<string | number>("");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [deleteId, setDeleteId] = useState<string | number>("");
-    // const [deleteLoading, setDeleteLoading] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [showAdminsOnly, setShowAdminsOnly] = useState(false);
+    
+    // const [showAdminsOnly, setShowAdminsOnly] = useState(false);
+    const [showAdminsOnly]= useState(false);
     const [user, setUser] = useState<UserItem>({
         id: 0,
         name: "",
@@ -118,7 +114,8 @@ const Users = () => {
 
     //Pagination
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [isPagination, setIsPagination] = useState(true);
+    // const [isPagination, setIsPagination] = useState(true);
+    const [isPagination] = useState(true);
     const [totalEntries, setTotalEntries] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [page, setPage] = useState(1);

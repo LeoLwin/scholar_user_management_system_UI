@@ -7,10 +7,10 @@ import Button from "@/components/ui/button/Button";
 interface queryParamType {
   [key: string]: unknown;
 }
-interface FilterType<T> {
+interface FilterType {
   onChangeParam: (queryParams: queryParamType) => void;
 }
-function Filter<T>({ onChangeParam }: FilterType<T>) {
+function Filter({ onChangeParam }: FilterType) {
   const [filters, setFilter] = useState<queryParamType>({});
   const [filtersData, setFilterData] = useState<queryParamType>({});
 
@@ -51,7 +51,7 @@ function Filter<T>({ onChangeParam }: FilterType<T>) {
                 id="input"
                 name="name"
                 placeholder="Search Role Name"
-                value={filters.name || ""}
+                value={filters.name as string || ""}
                 onChange={handleChange}
               />
             </div>

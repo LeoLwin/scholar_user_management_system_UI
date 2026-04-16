@@ -15,7 +15,7 @@ interface FormData {
   id: number;
   name: string;
   permissions: permissionItem[];
-  userCount?: number;
+  userCount: number;
 }
 interface FormErrors {
   name?: string;

@@ -7,10 +7,11 @@ import Button from "@/components/ui/button/Button";
 interface queryParamType {
   [key: string]: unknown;
 }
-interface FilterType<T> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface FilterType {
   onChangeParam: (queryParams: queryParamType) => void;
 }
-function FeatureFilter<T>({ onChangeParam }: FilterType<T>) {
+function FeatureFilter({ onChangeParam }: FilterType) {
   const [filters, setFilter] = useState<Record<string, string | number | undefined>>({});
   const [filtersData, setFilterData] = useState<queryParamType>({});
 
