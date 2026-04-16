@@ -39,6 +39,13 @@ interface ApiResponseType {
   data?: FeatureListResponseType | unknown;
 }
 
+export const getFeatureNames = async () => {
+  const res = await api.get("/features/name-value");
+  return {
+    message: "Feature Names",
+    data: res.data,
+  };
+};
 
 export const getFeatures = async (queryParams: unknown) => {
   const { page, per_page, sort_by, sort_order, filters } = queryParams as {

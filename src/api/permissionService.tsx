@@ -59,6 +59,7 @@ type ApiRolePermissionItem = {
     };
 };
 
+
 export const getPermisssions = async (queryParams: unknown) => {
     const { page, per_page, sort_by, sort_order, filters } = queryParams as {
         page: number;
@@ -120,7 +121,7 @@ export const getPermissionById = async (id: number) => {
 
 export const createRolePermissions = async (data: { roleId: number; permissionIds: number[] }) => {
     console.log('createRolePermissions payload', data);
-    const res: ApiResponseType = await api.post("/roles/assign-permissions", data);
+    const res: ApiResponseType = await api.post("/permissions/roles-permissions", data);
     const response = handleApiResponse(res);
     return {
         ...response,
@@ -153,3 +154,11 @@ export const updatePermission = async (id: number, data: CreatePermissionData) =
         data: res.data,
     }
 }
+
+export const getPermissionNames = async (roleId: number) => {
+  const res = await api.get(`/permissions/name-value?roleId=${roleId}`);
+  return {
+    message: "Permission Names",
+    data: res.data,
+  };
+};

@@ -6,6 +6,8 @@ interface ComponentCardProps {
   children: React.ReactNode;
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
+  customButtonClick?: () => void;
+  customButtonText?: string;
   handleButtonClick?: () => void; // Optional click handler for the button
   buttonText?: string; // Optional text for the button
 }
@@ -15,6 +17,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   children,
   className = "",
   desc = "",
+  customButtonClick,
+  customButtonText,
   handleButtonClick,
   buttonText,
 }) => {
@@ -28,15 +32,26 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
             {title}
           </h3>
-          {buttonText && (
-            <Button
-              size="sm"
-              startIcon={<PlusIcon />}
-              // onClick={createModal.openModal}
-              onClick={handleButtonClick}
-            >
-              {buttonText}
-            </Button>)}
+          <div className="flex gap-5">
+            {customButtonText && (
+              <Button
+                size="sm"
+                startIcon={<PlusIcon />}
+                // onClick={createModal.openModal}
+                onClick={customButtonClick}
+              >
+                {customButtonText}
+              </Button>)}
+            {buttonText && (
+              <Button
+                size="sm"
+                startIcon={<PlusIcon />}
+                // onClick={createModal.openModal}
+                onClick={handleButtonClick}
+              >
+                {buttonText}
+              </Button>)}
+          </div>
         </div>
         {desc && (
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">

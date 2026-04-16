@@ -14,13 +14,15 @@ import {
   // createPermissions,
   // updatePermission,
   deletePermission,
+  createRolePermissions,
   // getPermissionById,
   // createRolePermissions,
   // detailsRolesPermissions,
   // deletePermission
 } from "@/api/permissionService";
 import Notification from "@/components/ui/notification/Notifiaction";
-import CreateForm from "./CreateForm";
+// import CreateForm from "./CreateForm";
+import AssignRoleForm from "./AssignRoleForm";
 
 
 interface RoleItem {
@@ -121,7 +123,7 @@ export default function Permissions() {
             <span className={`text-sm ${count > 0 ? 'text-green-600 font-medium' : 'text-gray-400'}`}>
               {count} {count > 1 ? 'Roles' : 'Role'}
             </span>
-            
+
           </div>
         );
       },
@@ -134,14 +136,7 @@ export default function Permissions() {
         return (
           <div className="flex items-center justify-end gap-1">
 
-            {/* Actions Column ထဲမှာ ထည့်ရန် */}
-            <button
-              onClick={() => handleAssignRoles(data.id, data)}
-              className="p-1.5 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors group"
-              title="Assign Roles"
-            >
-              <GroupIcon className="size-5 text-gray-400 group-hover:text-green-500" />
-            </button>
+
             {/* View Detail Button */}
             <button
               onClick={() => viewDetails(data.id, data)}
@@ -190,11 +185,11 @@ export default function Permissions() {
     }));
   };
 
-  const handleAssignRoles = (id: number, permission: PermissionsItem) => {
+  const handleAssignRoles = () => {
     // console.log("Assign roles for permission ID:", id, permission);
-    setPermission(permission);
+    // setPermission(permission);
     assignRolesModal.openModal();
-    Notification("info", "info", `Assign roles for permission: ${permission.name}`);
+    // Notification("info", "info", `Assign roles for permission: ${permission.name}`);
   }
 
   useEffect(() => {
@@ -268,6 +263,20 @@ export default function Permissions() {
     fetchData();
   };
 
+  const onAssignRolesSave = async (data: { roleId: number; permissionIds: number[] }) => {
+    let result: ApiResult = { status: "error", message: "" };
+
+    result = await createRolePermissions(data);
+
+    Notification(result.status, result.status, result.message);
+
+    assignRolesModal.closeModal();
+    fetchData();
+
+    
+
+  };
+
   const handleDelete = (id: number) => {
     setSelectedId(id);
     deleteModal.openModal();
@@ -301,6 +310,7 @@ export default function Permissions() {
     createModal.openModal();
   };
 
+
   return (
     <>
       <PageBreadcrumb
@@ -313,7 +323,7 @@ export default function Permissions() {
       <div className="flex justify-end mb-5"></div>
       <FeatureFilter onChangeParam={handleParamUpdate} />
       <div className="space-y-6">
-        <ComponentCard title="Listing" buttonText="Create Feature" handleButtonClick={handleButtonClick}>
+        <ComponentCard title="Listing" buttonText="Create Permission" customButtonText="Assign Roles" customButtonClick={handleAssignRoles} handleButtonClick={handleButtonClick}>
           <DataTable
             columns={columns}
             data={permissions}
@@ -328,7 +338,11 @@ export default function Permissions() {
         </ComponentCard>
       </div>
       {/* <CreateForm createModal={createModal} onSave={saveData} />
+      
       <EditForm editModal={editModal} featureData={feature} onSave={saveData} /> */}
+      <AssignRoleForm createModal={assignRolesModal} onSave={onAssignRolesSave} />
+      {/* <AssignRoleForm createModal={assignRolesModal} /> */}
+
       <DeleteConfirmModal
         deleteModal={deleteModal}
         selectedId={selectedId}

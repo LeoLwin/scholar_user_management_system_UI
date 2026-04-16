@@ -52,9 +52,9 @@ const CustomSelect = ({
         : (themeMode === 'dark')
         ? "#374151"
         : "#d1d5db",
-      boxShadow: state.isFocused ? "0 0 0 0.1px #f96622" : "none",
+      boxShadow: state.isFocused ? "0 0 0 0.1px #4560FF" : "none",
       "&:hover": {
-        borderColor: "#f96622",
+        borderColor: "#4560FF",
       },
       opacity: isDisabled ? 0.6 : 1,
     }),
@@ -68,7 +68,7 @@ const CustomSelect = ({
     option: (base, state) => ({
       ...base,
       backgroundColor: state.isSelected
-        ? "#f96622"
+        ? "#560FF"
         : state.isFocused
         ? (themeMode === 'dark')
           ? "#1e293b"
@@ -85,7 +85,7 @@ const CustomSelect = ({
 
     multiValue: (base) => ({
       ...base,
-      backgroundColor: "#f96622", // orange background
+      backgroundColor: "#4560FF", // blue background
     }),
 
     multiValueLabel: (base) => ({
