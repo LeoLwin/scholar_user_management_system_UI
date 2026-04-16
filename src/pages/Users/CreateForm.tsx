@@ -93,7 +93,14 @@ function CreateForm({ createModal, onSave }: ModalProps) {
     const validationErrors = await validateForm();
     if (Object.keys(validationErrors).length === 0) {
       setLoading(true);
-      await onSave(formData);
+      const finalFormData = { ...formData };
+      if (!finalFormData.username || finalFormData.username.trim() === "") {
+        const randomDigits = Math.floor(100 + Math.random() * 900); 
+        const baseName = finalFormData.name.replace(/\s/g, '').toLowerCase();
+        finalFormData.username = `${baseName}_${randomDigits}`;
+      }
+      // await onSave(formData);
+      await onSave(finalFormData);
       setFormData(initialFormData);
       setLoading(false);
       setErrors({});

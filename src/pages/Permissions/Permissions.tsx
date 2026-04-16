@@ -14,11 +14,12 @@ import {
   createRolePermissions,
   createPermissions,
   updatePermission,
-  
+
 } from "@/api/permissionService";
 import Notification from "@/components/ui/notification/Notifiaction";
 import AssignRoleForm from "./AssignRoleForm";
 import CreateForm from "./CreateForm";
+import EditForm from "./EditForm";
 
 
 interface RoleItem {
@@ -34,6 +35,12 @@ interface PermissionsItem {
   roles: RoleItem[];
 }
 
+interface EditFormData {
+  id: number;
+  name: string;
+  featureId: number;
+  roleIds: number[];
+}
 
 const sortCols = ["name"];
 
@@ -73,6 +80,12 @@ export default function Permissions() {
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [editFormData, setEditFormData] = useState<EditFormData>({
+    id: 0,
+    name: "",
+    featureId: 0,
+    roleIds: [],
+  });
 
   const columns = [
     {
@@ -235,7 +248,13 @@ export default function Permissions() {
   };
 
   const handleEdit = async (id: number, permission: PermissionsItem) => {
-    setPermission(permission);
+    // setPermission(permission);
+    setEditFormData({
+      id: permission.id,
+      name: permission.name,
+      featureId: permission.featureId,
+      roleIds: permission.roles.map((r) => r.id),
+    });
     editModal.openModal();
   };
 
@@ -258,6 +277,36 @@ export default function Permissions() {
     });
     fetchData();
   };
+
+  const onUpdateSave = async (data: EditFormData) => {
+  try {
+    let result: ApiResult;
+    
+    if (!data.id) {
+      // Create logic
+      result = await createPermissions(data);
+      createModal.closeModal();
+    } else {
+      // Update logic
+      result = await updatePermission(data.id, data);
+      editModal.closeModal();
+    }
+
+    Notification(result.status, result.status, result.message);
+    
+    setEditFormData({
+      id: 0,
+      name: "",
+      featureId: 0,
+      roleIds: [],
+    });
+
+    fetchData(); 
+  } catch (error) {
+    console.error("Save Error:", error);
+    Notification("error", "Error", "Something went wrong while saving.");
+  }
+};
 
   const onAssignRolesSave = async (data: { roleId: number; permissionIds: number[] }) => {
     let result: ApiResult = { status: "error", message: "" };
@@ -333,9 +382,9 @@ export default function Permissions() {
           />
         </ComponentCard>
       </div>
-      {/* 
-      
-      <EditForm editModal={editModal} featureData={feature} onSave={saveData} /> */}
+
+
+      <EditForm editModal={editModal} initialData={editFormData} onUpdate={onUpdateSave} />
       <CreateForm createModal={createModal} onSave={saveData} />
       <AssignRoleForm createModal={assignRolesModal} onSave={onAssignRolesSave} />
       {/* <AssignRoleForm createModal={assignRolesModal} /> */}
