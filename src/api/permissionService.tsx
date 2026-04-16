@@ -43,7 +43,7 @@ interface ApiResponseType {
 }
 
 type CreatePermissionData = {
-    id: number;
+    id?: number;
     name: string;
     featureId: number;
 };

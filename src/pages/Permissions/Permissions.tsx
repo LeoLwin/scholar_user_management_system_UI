@@ -4,25 +4,21 @@ import ComponentCard from "@/components/common/ComponentCard";
 import DataTable from "@/components/tables/DataTable";
 import { useModal } from "@/hooks/useModal";
 import FeatureFilter from "./Filter";
-// import CreateFeatureForm from "./CreateForm";
-import EditForm from "./EditForm";
+// import EditForm from "./EditForm";
 import Details from "./Details";
 import DeleteConfirmModal from "@/pages/common/DeleteConfirmModal";
 import { PencilIcon, TrashBinIcon, EyeIcon, LockIcon, GridIcon, GroupIcon } from "../../icons";
 import {
   getPermisssions,
-  // createPermissions,
-  // updatePermission,
   deletePermission,
   createRolePermissions,
-  // getPermissionById,
-  // createRolePermissions,
-  // detailsRolesPermissions,
-  // deletePermission
+  createPermissions,
+  updatePermission,
+  
 } from "@/api/permissionService";
 import Notification from "@/components/ui/notification/Notifiaction";
-// import CreateForm from "./CreateForm";
 import AssignRoleForm from "./AssignRoleForm";
+import CreateForm from "./CreateForm";
 
 
 interface RoleItem {
@@ -243,13 +239,13 @@ export default function Permissions() {
     editModal.openModal();
   };
 
-  const saveData = async (data: PermissionsItem) => {
-    const result: ApiResult = { status: "error", message: "" };
+  const saveData = async (data: { id?: number, name: string, featureId: number }) => {
+    let result: ApiResult = { status: "error", message: "" };
     if (!data.id) {
-      // result = await createPermissions(data);
+      result = await createPermissions(data);
       createModal.closeModal();
     } else {
-      // result = await updatePermission(feature.id, data);
+      result = await updatePermission(data.id, data);
       editModal.closeModal();
     }
     Notification(result.status, result.status, result.message);
@@ -273,7 +269,7 @@ export default function Permissions() {
     assignRolesModal.closeModal();
     fetchData();
 
-    
+
 
   };
 
@@ -337,9 +333,10 @@ export default function Permissions() {
           />
         </ComponentCard>
       </div>
-      {/* <CreateForm createModal={createModal} onSave={saveData} />
+      {/* 
       
       <EditForm editModal={editModal} featureData={feature} onSave={saveData} /> */}
+      <CreateForm createModal={createModal} onSave={saveData} />
       <AssignRoleForm createModal={assignRolesModal} onSave={onAssignRolesSave} />
       {/* <AssignRoleForm createModal={assignRolesModal} /> */}
 
