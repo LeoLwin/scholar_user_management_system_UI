@@ -13,6 +13,8 @@ import BasicTables from "./pages/Tables/BasicTables";
 import RoleRoute from "./components/auth/RoleRoute";
 import Users from "./pages/Users/Users";
 import Role from "./pages/Roles/Role";
+import Permission from "./pages/Permissions/Permissions";
+import Feature from "./pages/Features/Feature";
 
 
 export default function App() {
@@ -51,6 +53,28 @@ export default function App() {
                   </RoleRoute>
                 }
               />
+
+               <Route
+                index
+                path="/features"
+                element={
+                  <RoleRoute allowedRoles={["Super Admin"]}>
+                    <Feature />
+                  </RoleRoute>
+                }
+              />
+
+               <Route
+                index
+                path="/permissions"
+                element={
+                  <RoleRoute allowedRoles={["Super Admin"]}>
+                    <Permission />
+                  </RoleRoute>
+                }
+              />
+
+              
 
 
               <Route path="/profile" element={<UserProfiles />} />

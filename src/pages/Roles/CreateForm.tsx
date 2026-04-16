@@ -79,7 +79,7 @@ function CreateForm({ createModal, roleData, onSave }: ModalProps) {
       <Modal
         isOpen={createModal.isOpen}
         onClose={createModal.closeModal}
-        className="max-w-[500px] m-4" // Role name တစ်ခုတည်းမို့ width ကို နည်းနည်းလျှော့လိုက်တာ ပိုကျစ်လစ်သွားစေတယ်
+        className="max-w-[500px] m-4" 
       >
         <div className="relative w-full p-6 overflow-hidden bg-white rounded-2xl dark:bg-gray-900 lg:p-10">
           {/* Header Section */}
